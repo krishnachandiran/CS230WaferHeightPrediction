@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>CY21UE</title>
+  </head>
+  <body>
+
+   
+<meta name="theme-color" content="#7952b3">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      
+      canvas {
+            background-color: rgb(186 209 243 / 25%);
+        }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="form-validation.css" rel="stylesheet">
+  </head>
+  <body class="bg-light">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+      <h2>University Engagement - Data generator CY21</h2>
+      <p class="lead">Fill in the value and click generate button !</p>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-5 col-lg-4 order-md-last">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Wafer Description</span>
+          <span class="badge bg-secondary rounded-pill">i</span>
+        </h4>
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between lh-sm text-success">
+            <div>
+              <h6 class="my-0">Wafer Width</h6>
+              <small >Width of wafer calculated</small>
+            </div>
+            <span id="widthinfo">$1</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-sm text-success">
+            <div  >
+              <h6 class="my-0">Wafer Height</h6>
+              <small >Height of wafer calculated</small>
+            </div>
+            <span id="heightinfo">$8</span>
+          </li>
+          
+        </ul>
+     <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Die Image</span>
+          <span class="badge bg-secondary rounded-pill">i</span>
+        </h4>
+       <div>  <small >Draw Care and Exclusion areas inside the die</small></div>
+     <div>  <small > Left Mouse Button -> Care area</small></div>
+     <div> <small > Right Mouse button -> Exclusion zone</small></div>
+     <div class="mb-3 mt-3">
+<canvas id="canvas" width="200" height="100"></canvas>
+</div>
+<small id="output"></small>
+      </div>
+      <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3">Generation parameters</h4>
+        <form class="needs-validation" novalidate>
+          <div class="row g-3">
+             <div class="col-12">
+                 <h6 class="my-0">Die configuration</h6>
+              </div>
+              
+            <div class="col-sm-6">
+              <label for="diewidth" class="form-label">Die Width</label>
+               <input class="form-control"  id="diewidth" type="number" value="500"  required>
+              <div class="invalid-feedback">
+                Valid Die width is required.
+              </div>
+            </div>
+            
+             <div class="col-sm-6">
+              <label for="dieheight" class="form-label">Die Height</label>
+               <input class="form-control"  id="dieheight" type="number" value="400"  required>
+              <div class="invalid-feedback">
+                Valid Die height is required.
+              </div>
+            </div>
+            
+               <div class="col-sm-6">
+              <label for="dierows" class="form-label">Number of Die Rows</label>
+               <input class="form-control"  id="dierows" type="number" value="1"  required>
+              <div class="invalid-feedback">
+                Valid Number of die rows is required.
+              </div>
+            </div>
+            
+               <div class="col-sm-6">
+              <label for="diecolumns" class="form-label">Number of Die Columns</label>
+               <input class="form-control"  id="diecolumns" type="number" value="5"  required>
+              <div class="invalid-feedback">
+                Valid Number of die columns is required.
+              </div>
+            </div>
+            
+                 <div class="col-12">
+              <label for="streetwidth" class="form-label">Street Width</label>
+               <input class="form-control"  id="streetwidth" type="number" value="0"  required>
+              <div class="invalid-feedback">
+                Valid Street Width is required.
+              </div>
+            </div>
+            
+             <div class="col-12">
+                 <h6 class="my-0">Care areas configuration</h6>
+              </div>
+               <ul id="careEntries" class="list-group">
+                </ul>
+                <div class="col-12">
+                 <h6 class="my-0">Exclusion areas configuration</h6>
+              </div>
+               <ul id= "exeEntries" class="list-group">
+  
+                </ul>
+             <div class="col-12">
+                 <h6 class="my-0">Pattern configuration</h6>
+              </div>
+            
+             <div class="col-12">
+                 <label for="pattern" class="form-label">Die pattern</label>
+                  <select class="form-select" id="pattern" required>
+                    <option value="">Choose...</option>
+                    <option value="simple_lines">Lines</option>
+                    <option value="simple_squares">Squares</option>
+                    <option value="simple_triangles">Triangles</option>
+                    <option value="simple_hexagons">Hexagons</option>
+                    <option value="complex_maze">Complex Maze</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a valid die pattern.
+                  </div>
+              </div>
+              
+              
+               <div class="col-12">
+                 <label for="patternbgr" class="form-label">Die Background</label>
+                  <select class="form-select" id="patternbgr" required>
+                    <option value="">Choose...</option>
+                    <option value="plain">Plain</option>
+                    <option value="gradient">Gradient</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a valid die background.
+                  </div>
+              </div>
+              
+       
+            
+               <div class="col-12">
+                 <h6 class="my-0">Impurity configuration</h6>
+              </div>
+              
+               <div class="col-12">
+                  <label for="impurities" class="form-label">Number of impurities per die</label>
+                 <input type="range" class="form-range" min="0" max="5000" id="impurities">
+              </div>
+              
+               <div class="col-12">
+                 <label for="impurityluminance" class="form-label">Impurity Luminance</label>
+                  <select class="form-select" id="impurityluminance" required>
+                    <option value="">Choose...</option>
+                    <option value="const">Constant</option>
+                    <option value="upper_range">Upper Range</option>
+                     <option value="dual_range">Dual Range</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a valid die background.
+                  </div>
+              </div>
+              
+
+             <div class="col-12">
+                 <h6 class="my-0">Swath configuration</h6>
+              </div>
+              
+               <div class="col-12">
+             <label for="swathwidth" class="form-label">Swath Width</label>
+              <select class="form-select" id="swathwidth" required>
+                <option value="">Choose...</option>
+              </select>
+              <div class="invalid-feedback">
+                Please provide a valid swath width.
+              </div>
+              </div>
+              
+              
+                <div class="col-12">
+             <label for="swathheight" class="form-label">Swath Height</label>
+              <select class="form-select" id="swathheight" required>
+                <option value="">Choose...</option>
+              </select>
+              <div class="invalid-feedback">
+                Please provide a valid swath height.
+              </div>
+              </div>
+              
+            <div class="col-sm-6">
+              <label for="userid" class="form-label">Folder or Username</label>
+               <input class="form-control"  id="userid"  required>
+              <div class="invalid-feedback">
+                Valid Die width is required.
+              </div>
+            </div>
+               
+               
+             
+          </div>
+
+        
+
+         
+        </form>
+          <hr class="my-4">
+         <button class="w-100 btn btn-primary btn-lg" onclick ="generate()" >Generate Swath Images</button>
+      </div>
+    </div>
+   
+  </main>
+ 
+
+</div>
+
+      <script src="static/index.js"></script>
+  </body>
+</html>
