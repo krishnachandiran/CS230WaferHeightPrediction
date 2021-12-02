@@ -8,11 +8,11 @@ def load_weights(model, weights_file, dtype):
     data_dict = np.load(weights_file, encoding='latin1', allow_pickle=True).item()
 
     if True:
-        print(data_dict['conv1']['weights'])
-        print(data_dict['conv1']['weights'].shape)
+    #    print(data_dict['conv1']['weights'])
+     #   print(data_dict['conv1']['weights'].shape)
         data_new = np.delete(data_dict['conv1']['weights'][:], 1, axis=2)
         data_new = np.delete(data_new, 1, axis=2)
-        print(data_new.shape)
+     #   print(data_new.shape)
         model_params['conv1.weight'] = torch.from_numpy(data_new).type(dtype).permute(3,2,0,1)
         #model_params['conv1.bias'] = torch.from_numpy(data_dict['conv1']['biases']).type(dtype)
         model_params['bn1.weight'] = torch.from_numpy(data_dict['bn_conv1']['scale']).type(dtype)

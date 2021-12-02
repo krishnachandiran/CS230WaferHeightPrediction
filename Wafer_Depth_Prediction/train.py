@@ -16,39 +16,52 @@ dtype = torch.cuda.FloatTensor
 weights_file = "NYU_ResNet-UpProj.npy"
 
 
-def load_split():
+def load_split(data_path):
     current_directoty = os.getcwd()
-    train_lists_path = current_directoty + '/trainIdxs.txt'
-    test_lists_path = current_directoty + '/testIdxs.txt'
+    # train_lists_path = current_directoty + '/trainIdxs.txt'
+    # test_lists_path = current_directoty + '/testIdxs.txt'
 
-    train_f = open(train_lists_path)
-    test_f = open(test_lists_path)
+    total_list = []
+    for img_name in os.listdir(data_path):
+        #print(os.path.splitext(img_name)[1] )
+       # print(os.path.splitext(img_name)[0] )
+        if os.path.splitext(img_name)[1] == '.png' and os.path.splitext(img_name)[0].find("_foc") == -1 and os.path.splitext(img_name)[0].find("_ver") == -1 and os.path.splitext(img_name)[0].find("_54") == -1:
+            total_list.append(img_name)
+
+    print(total_list)
+    # train_f = open(train_lists_path)
+    # test_f = open(test_lists_path)
 
     train_lists = []
     test_lists = []
 
-    train_lists_line = train_f.readline()
-    while train_lists_line:
-        train_lists.append(train_lists_line)
-        train_lists_line = train_f.readline()
-    train_f.close()
+    # train_lists_line = train_f.readline()
+    # while train_lists_line:
+    #     train_lists.append(train_lists_line)
+    #     train_lists_line = train_f.readline()
+    # train_f.close()
 
-    test_lists_line = test_f.readline()
-    while test_lists_line:
-        test_lists.append(test_lists_line)
-        test_lists_line = test_f.readline()
-    test_f.close()
+    # test_lists_line = test_f.readline()
+    # while test_lists_line:
+    #     test_lists.append(test_lists_line)
+    #     test_lists_line = test_f.readline()
+    # test_f.close()
 
-    val_start_idx = int(len(train_lists) * 0.8)
+    val_start_idx = int(len(total_list) * 0.6)
 
-    val_lists = train_lists[val_start_idx:-1]
-    train_lists = train_lists[0:val_start_idx]
+    val_lists = total_list[val_start_idx:-1]
+    train_lists = total_list[0:val_start_idx]
+
+    test_start_idx =  int(len(val_lists) * 0.6)
+
+    test_lists = val_lists[test_start_idx:-1]
+    val_lists = val_lists[0:test_start_idx]
 
     return train_lists, val_lists, test_lists
 
 
 def main():
-    batch_size = 2
+    batch_size = 20
     #data_path = 'nyu_depth_v2_labeled.mat'
     data_path = 'E:\\DL\\5X_center_dies_MOI_items\\out'
     learning_rate = 1.0e-5
@@ -58,7 +71,7 @@ def main():
     resume_from_file = False
 
     # 1.Load data
-    train_lists, val_lists, test_lists = load_split()
+    train_lists, val_lists, test_lists = load_split(data_path)
     print(train_lists)
     print(val_lists)
     print(test_lists)
@@ -69,8 +82,8 @@ def main():
                                                batch_size=batch_size, shuffle=True, drop_last=True)
     test_loader = torch.utils.data.DataLoader(WaferLoader(data_path, test_lists),
                                              batch_size=batch_size, shuffle=True, drop_last=True)
-    print(train_loader)
-    print(val_loader.dataset)
+  #  print(train_loader)
+ #   print(val_loader.dataset)
     # 2.Load model
     print("Loading model......")
     model = FCRN(batch_size)
@@ -85,9 +98,9 @@ def main():
 
     model.load_state_dict(load_weights(model, weights_file, dtype))
     model = model.cuda()
-    print(model)
-    summary(model, (1,228,228), batch_size=35, device='cuda')
-    writer=SummaryWriter('content/logsdir')
+   # print(model)
+   # summary(model, (1,228,228), batch_size=35, device='cuda')
+   # writer=SummaryWriter('content/logsdir')
     # 3.Loss
     loss_fn = torch.nn.MSELoss().cuda()
     print("loss_fn set.")
@@ -101,8 +114,8 @@ def main():
     loss_local = 0
     with torch.no_grad():
         for input, depth in val_loader:
-            print(input)
-            print(depth)
+            # print(input)
+            # print(depth)
             input_var = Variable(input.type(dtype))
             depth_var = Variable(depth.type(dtype))
 

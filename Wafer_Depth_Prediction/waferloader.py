@@ -24,21 +24,21 @@ class WaferLoader(data.Dataset):
         img_idx = self.lists[index]
        # print(self.lists)
       #  print(img_idx)
-        image = Image.open(self.data_path+"\\"+str(img_idx).strip()+"_ver.png")
+        image = Image.open(self.data_path+"\\"+str(img_idx).strip())
         image.load()
        
         image = np.asarray( image, dtype="int16" )
-        print(image.shape)
+      #  print(image.shape)
         # image = Image.fromarray(image)
         # image.save('img1.png')
         # print(image)
-        depth = Image.open(self.data_path+"\\"+str(img_idx).strip()+"_foc.png")
+        depth = Image.open(self.data_path+"\\"+str(img_idx).strip().split(".png")[0]+"_foc.png")
         depth.load()
         depth = np.asarray( image, dtype="uint8" )
       #  print(depth.shape)
 
         img = image.transpose(1, 0)
-        print(img.shape)
+      #  print(img.shape)
         #img = self.imgs[img_idx]
         dpt = depth.transpose(1, 0)
       #  print(dpt.shape)
@@ -60,8 +60,8 @@ class WaferLoader(data.Dataset):
 
         img = input_transform(img)
         dpt = target_depth_transform(dpt)
-        print(img.shape)
-        print(dpt.shape)
+     #   print(img.shape)
+      #  print(dpt.shape)
         #image = Image.fromarray(np.uint8(img))
         #image.save('img2.png')
 
